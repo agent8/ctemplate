@@ -1,26 +1,26 @@
 #!/bin/sh
 
 build_version=2
-ANDROID_PLATFORM=android-16
-archs="armeabi armeabi-v7a x86"
+ANDROID_PLATFORM=android-24
+archs="armeabi armeabi-v7a x86 arm64-v8a"
 package_name=ctemplate-android
 
 current_dir="`pwd`"
 
 if test "x$ANDROID_NDK" = x ; then
-  echo should set ANDROID_NDK before running this script.
-  exit 1
+echo should set ANDROID_NDK before running this script.
+exit 1
 fi
 
 function build {
-  rm -rf "$current_dir/obj"
+rm -rf "$current_dir/obj"
 
-  cd "$current_dir/jni"
-  $ANDROID_NDK/ndk-build TARGET_PLATFORM=$ANDROID_PLATFORM TARGET_ARCH_ABI=$TARGET_ARCH_ABI
+cd "$current_dir/jni"
+$ANDROID_NDK/ndk-build TARGET_PLATFORM=$ANDROID_PLATFORM TARGET_ARCH_ABI=$TARGET_ARCH_ABI
 
-  mkdir -p "$current_dir/$package_name-$build_version/libs/$TARGET_ARCH_ABI"
-  cp "$current_dir/obj/local/$TARGET_ARCH_ABI/libctemplate.a" "$current_dir/$package_name-$build_version/libs/$TARGET_ARCH_ABI"
-  rm -rf "$current_dir/src"
+mkdir -p "$current_dir/$package_name-$build_version/libs/$TARGET_ARCH_ABI"
+cp "$current_dir/obj/local/$TARGET_ARCH_ABI/libctemplate.a" "$current_dir/$package_name-$build_version/libs/$TARGET_ARCH_ABI"
+rm -rf "$current_dir/src"
 }
 
 # Includes
@@ -31,8 +31,8 @@ cp -r include/ctemplate "$current_dir/$package_name-$build_version/include"
 
 # Start building.
 for arch in $archs ; do
-  TARGET_ARCH_ABI=$arch
-  build
+TARGET_ARCH_ABI=$arch
+build
 done
 
 cd "$current_dir"
